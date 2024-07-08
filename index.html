@@ -1,73 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <div class="container" x-data="{
+        showCart: false, 
+        smallPizzaTotal : 0.00, 
+        smallpizzaQty : 0, 
+        mediumPizzaTotal : 0.00, 
+        mediumpizzaQty : 0, 
+        largePizzaTotal : 0.00, 
+        largepizzaQty : 0,
+        payNow : false, 
+        paymentAmount : 0,
+        paymentMessage : '',
+        buysmallPizza() {
+            this.smallPizzaTotal += 49.00, this.smallpizzaQty += 1
+        },
+        buymediumPizza() {
+            this.mediumPizzaTotal += 89.00, this.mediumpizzaQty += 1
+        },
+        buylargePizza() {
+            this.largePizzaTotal += 129.00, this.largepizzaQty += 1
+        },
+        clearsmallPizza() {
+            if (this.smallpizzaQty > 0) {
+            this.smallPizzaTotal -= 49.00, this.smallpizzaQty -= 1
+            }
+        },
+        clearmediumPizza() {
+            if (this.mediumpizzaQty > 0) {
+            this.mediumPizzaTotal -= 89.00, this.mediumpizzaQty -= 1
+            }
+        },
+        clearlargePizza() {
+            if (this.largepizzaQty > 0) {
+            this.largePizzaTotal -= 129.00, this.largepizzaQty -= 1
+            }
+        },
+        cartTotal() {
+            return this.smallPizzaTotal + this.mediumPizzaTotal + this.largePizzaTotal
+        },
+        totalQty() {
+            return this.smallpizzaQty + this.mediumpizzaQty + this.largepizzaQty
+        },
+        makePayment() {
+            if (!this.paymentAmount) {
+                this.paymentMessage = 'No Amount Entered!'
+            }
+            if (this.paymentAmount >= this.cartTotal()) {
+                this.paymentMessage = 'Payment successful!'
 
-<h1>Perfect Pizza</h1>
-    <div class="pizzas">
-    
-<div class="pizza small_pizza">
-    <h2>Small Pizza</h2>
-    <img src="pizza.png" width="100" ->
-    <h3>R78.99</h3>
-    <div>
- small pizza with 3 toppings. 1 meat topping. 3 or less other toppings
-    
-</div>
-</div>
-
-<div class="pizza medium_pizza">
-        <h2>Medium Pizza</h2>
-        <img src="pizza.png" width="125" ->
-        <h3>R89.00</h3>
-        <div>
-            medium margeritha pizza with 3 toppings max. 2 or less meat toppings. 3 or less other toppings.
-    </div>
-</div>
-
-<div class="pizza large_pizza">
-            <h2>Large Pizza</h2>
-            <img src="pizza.png" width="100" ->
-            <h3>R129.00</h3>
-            <div>
-            Large margeritha pizza with 3 toppings max. 3 meat toppings max. 3 or less other toppings.
-        </div>
-    </div>
-</div>
-<table>
-    <tr>
-        <td>
-           
-                <h2>Contact details</h2>
-                Contact us at :(021)-541-1000 twitter
-                <div class="special">
-                 /fb
-                </div>
-                 /insta 
-                 <div class="special">
-                 @perfectpizza
-                 </div>
+                setTimeout(() => {
+                    this.payNow = false;
+                    this.clearCart();
+                }, 3000)
                 
-         
-        </td>
-        <td >
-            <div class="special">
-                Pizza Plaza
-                </div>
+            }
+            else {
+                this.paymentMessage = ' Payment failed - Insufficient amount!'
+            }
+                
+        },
+        clearCart() {
+        this.smallPizzaTotal = 0.00; 
+        this.smallpizzaQty = 0; 
+        this.mediumPizzaTotal = 0.00; 
+        this.mediumpizzaQty = 0; 
+        this.largePizzaTotal = 0.00; 
+        this.largepizzaQty = 0;
+        }
+    }">
+        <h1>Perfect Pizza</h1>
+        <h3>Pizza Orders</h3>
+        <div class="pizzas-section">
+            <div class="wrapper">
+                <div class="section">
+                    <div class="">
+                        <h2>Cart
+                            <img src="cart.png" width="30" alt="">
+                        </h2>
+                    </div>
+                    <div class="f1">
+                        <button x-on:Click="showCart=true">
+                            <img src="cart.png" width="30" alt="">Show Cart
+                        </button>
+                        <strong x-show="totalQty() > 0"><span x-text="totalQty()"></span> pizzas in your cart.</strong>
+                    </div>
+                    <div class="cart-box">
+                        <div class="cart" x-show="showCart">
+                            <div>
+                                <button x-on:Click="showCart=false">
+                                    <img src="cart.png" width="30" alt="">Close Cart
+                                </button>
+                                <strong x-show="totalQty() > 0"><span x-text="totalQty()"></span> pizzas in your cart.</strong>
+                            </div>
+                           
+                            <table>
+                                <tr x-show="smallpizzaQty > 0">
+                                    <td>Small Pizza</td>
+                                    <td>
+                                        <span x-text="smallpizzaQty"></span>
+                                        <button x-on:click="buysmallPizza()" x-show="smallpizzaQty > 0">+</button>
+                                        <button x-on:click="clearsmallPizza()" x-show="smallpizzaQty > 0">-</button>
+                                    </td>
+                                    <td>
+                                        R<span x-text="smallPizzaTotal"></span>
+                                    </td>
+                                </tr>
+                                <tr x-show="mediumpizzaQty > 0">
+                                    <td>Medium Pizza</td>
+                                    <td>
+                                        <span x-text="mediumpizzaQty"></span>
+                                        <button x-on:click="buymediumPizza()" x-show="mediumpizzaQty > 0">+</button>
+                                        <button x-on:click="clearmediumPizza()" x-show="mediumpizzaQty > 0">-</button>
+                                    </td>
+                                    <td>
+                                        R<span x-text="mediumPizzaTotal"></span>
+                                    </td>
+                                </tr>
+                                <tr x-show="largepizzaQty > 0">
+                                    <td>Large Pizza</td>
+                                    <td>
+                                        <span x-text="largepizzaQty"></span>
+                                        <button x-on:click="buylargePizza()" x-show="largepizzaQty > 0">+</button>
+                                        <button x-on:click="clearlargePizza()" x-show="largepizzaQty > 0">-</button>
+                                    </td>
+                                    <td>
+                                        R<span x-text="largePizzaTotal"></span>
+                                    </td>
+                                </tr>
+                                <tr x-show="cartTotal() > 0">
+                                    <td colspan="2">Total</td>
+                                    <td>
+                                        R<span x-text="cartTotal()"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div x-show="payNow">
+                                            <div class="message" x-text="paymentMessage"></div>
+                                            <div>
+                                                <label for="">Payment amount</label>
+                                                <input class="input" type="number" placeholder="Payment amount" x-model="paymentAmount">
+                                                <button x-show="paymentAmount > 0" x-on:click="makePayment" class="btn">
+                                                    <img src="cart.png" width="20" alt="">Pay Now
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button x-show="!payNow" x-on:click="payNow=true" class="btn">
+                                            <img src="cart.png" width="20" alt="">Pay
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+            
 
-                Dough Road
-                <div class="special">
-                Base Town
                 </div>
-           
-        </td>
-    </tr>
-</table>
-<script src="index.js" defer ></script>
+            </div>
+        </div>
+
+        <div class="pizzas">
+            <div class="pizza small_pizza">
+                <h2>Small Pizza</h2>
+                <img src="pizza.png" width="100" ->
+                <h3>R78.99</h3>
+                <div>
+                    small pizza with 3 toppings. 1 meat topping. 3 or less other toppings
+
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="pay btn" x-on:click="buysmallPizza()">BUY</button>
+                </div>
+            </div>
+
+            <div class="pizza medium_pizza">
+                <h2>Medium Pizza</h2>
+                <img src="pizza.png" width="125" ->
+                <h3>R89.00</h3>
+                <div>
+                    medium margeritha pizza with 3 toppings max. 2 or less meat toppings. 3 or less other toppings.
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="pay btn" x-on:click="buymediumPizza()">BUY</button>
+                </div>
+            </div>
+
+            <div class="pizza large_pizza">
+                <h2>Large Pizza</h2>
+                <img src="pizza.png" width="100" ->
+                <h3>R129.00</h3>
+                <div>
+                    Large margeritha pizza with 3 toppings max. 3 meat toppings max. 3 or less other toppings.
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="pay btn" x-on:click="buylargePizza()">BUY</button>
+                </div>
+            </div>
+        </div>
+        <table>
+            <tr>
+                <td>
+
+                    <h2>Contact details</h2>
+                    Contact us at :(021)-541-1000 twitter
+                    <div class="special">
+                        /fb
+                    </div>
+                    /insta
+                    <div class="special">
+                        @perfectpizza
+                    </div>
+
+
+                </td>
+                <td>
+                    <div class="special">
+                        Pizza Plaza
+                    </div>
+
+                    Dough Road
+                    <div class="special">
+                        Base Town
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script src="index.js" defer></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 </body>
+
 </html>
